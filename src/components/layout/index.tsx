@@ -3,10 +3,12 @@ import Box from "@mui/material/Box";
 import LayoutNavbar from "./navbar";
 import LayoutSidebar from "./sidebar";
 
+import navigationItems from "@/configs/navigation";
+
 const Layout = ({ children }) => {
   return (
     <Box display="flex" flexDirection="row">
-      <LayoutSidebar />
+      <LayoutSidebar navItems={navigationItems} />
       <Box
         sx={{
           display: "flex",

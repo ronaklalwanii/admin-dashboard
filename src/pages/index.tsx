@@ -1,3 +1,7 @@
-export default function Home() {
-  return <>HOME</>;
-}
+import OverviewComponent from "@/views/Overview";
+
+const Overview = () => {
+  return <OverviewComponent />;
+};
+
+export default Overview;

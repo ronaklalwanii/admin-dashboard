@@ -21,7 +21,7 @@ const Navbar = () => (
       {mode === "dark" ? <LightModeOutlined /> : <DarkModeOutlined />}
     </IconButton> */}
         <Stack direction="row" gap="16px" alignItems="center">
-          <Avatar src="/img/user-avatar.png" alt="user-avatar" />
+          <Avatar src="/images/avatars/avatar-1.png" alt="user-avatar" />
           <Typography variant="subtitle2">Kilmister</Typography>
         </Stack>
       </Stack>

@@ -1,8 +1,13 @@
 import { useState } from "react";
 
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -10,19 +15,20 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import ListItemButton from "@mui/material/ListItemButton";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  MenuRounded,
-  Dashboard,
-} from "@mui/icons-material";
+import * as Icon from "@mui/icons-material";
 
 import config from "@/configs/themeConfig";
 
-const Sidebar = () => {
+interface SidebarProps {
+  navItems: any[];
+}
+
+const Sidebar = ({ navItems }: SidebarProps) => {
   const [hover, setHover] = useState(false);
   const [opened, setOpened] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+
+  const router = useRouter();
 
   let hoverFlag = false;
   const theme = useTheme();
@@ -35,7 +41,7 @@ const Sidebar = () => {
       return {
         open: opened,
         variant: "temporary",
-        onclose: () => setOpened(false),
+        onClose: () => setOpened(false),
         ModalProps: { keepMounted: true },
         sx: {
           "& .MuiDrawer-paper": {
@@ -66,6 +72,26 @@ const Sidebar = () => {
     }
   };
 
+  const renderMenuItems = () => {
+    return navItems.map((item) => {
+      const MenuItemIcon = Icon[item.icon] || Icon.CircleOutlined;
+
+      return (
+        <ListItem disablePadding key={item.title}>
+          <ListItemButton
+            component={Link}
+            href={item.url}
+            selected={item.url === router.asPath}
+          >
+            <ListItemIcon>
+              <MenuItemIcon />
+            </ListItemIcon>
+            <ListItemText primary={item.title} />
+          </ListItemButton>
+        </ListItem>
+      );
+    });
+  };
   return (
     <>
       <Box
@@ -90,74 +116,32 @@ const Sidebar = () => {
         <Drawer {...drawerProps()}>
           <Box
             sx={{
-              pl: 5,
+              p: 2,
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
             }}
           >
-            Dashboards
-            <IconButton onClick={() => setCollapsed((prev) => !prev)}>
-              {collapsed ? <ChevronRight /> : <ChevronLeft />}
-            </IconButton>
+            <Icon.Abc sx={{ mr: 1, height: 50, width: 50 }} />
+            {collapsed && !hover ? null : (
+              <>
+                <Typography variant="h6">Admin Panel</Typography>
+                <IconButton
+                  sx={{ ml: "auto" }}
+                  onClick={() => setCollapsed((prev) => !prev)}
+                >
+                  {collapsed ? <Icon.ChevronRight /> : <Icon.ChevronLeft />}
+                </IconButton>
+              </>
+            )}
           </Box>
-          <Box
-            sx={{
-              flexGrow: 1,
-              overflowX: "hidden",
-              overflowY: "auto",
-            }}
-          >
-            <ListItemButton
-              //   component={Link}
-              //   to="/"
-              //   selected={selectedKey === "/"}
-              onClick={() => {
-                setOpened(false);
-              }}
-              sx={{
-                pl: 2,
-                py: 1,
-                "&.Mui-selected": {
-                  "&:hover": {
-                    backgroundColor: "transparent",
-                  },
-                  backgroundColor: "transparent",
-                },
-                justifyContent: "center",
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  justifyContent: "center",
-                  minWidth: 36,
-                  color: "primary.contrastText",
-                }}
-              >
-                <Dashboard />
-              </ListItemIcon>
-              <ListItemText primary={"Menu Item 1"} />
-            </ListItemButton>
-          </Box>
+          {navItems && navItems.length ? (
+            <List>{renderMenuItems()}</List>
+          ) : null}
         </Drawer>
 
-        <Box
-          sx={{
-            display: { xs: "block", md: "none" },
-            position: "fixed",
-            top: "64px",
-            left: "0px",
-            borderRadius: "0 6px 6px 0",
-            // bgcolor: "secondary.main",
-            zIndex: 1199,
-            width: "36px",
-          }}
-        >
-          <IconButton
-            sx={{ color: "#fff", width: "36px" }}
-            onClick={() => setOpened((prev) => !prev)}
-          >
-            <MenuRounded />
+        <Box sx={{ mt: 1.5, display: { xs: "block", md: "none" } }}>
+          <IconButton onClick={() => setOpened((prev) => !prev)}>
+            <Icon.MenuRounded />
           </IconButton>
         </Box>
       </Box>
